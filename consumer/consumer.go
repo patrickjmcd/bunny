@@ -2,12 +2,13 @@ package consumer
 
 import (
 	"context"
+	"time"
+
 	"github.com/patrickjmcd/bunny/internal/metrics"
 	"github.com/patrickjmcd/bunny/rabbit"
 	"github.com/patrickjmcd/bunny/rabbit/options"
 	"go.opentelemetry.io/otel/propagation"
 	"golang.org/x/sync/errgroup"
-	"time"
 
 	"github.com/patrickjmcd/bunny/internal/tracing"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -133,7 +134,6 @@ func (rc *RabbitConsumer) Close() error {
 }
 
 func (rc *RabbitConsumer) invokeMessageHandler(ctx context.Context, msg *amqp.Delivery) error {
-
 	value, err := rc.ValueDeserializer.Deserialize(ctx, msg.RoutingKey, msg.Body)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to deserialize message")
@@ -145,7 +145,7 @@ func (rc *RabbitConsumer) invokeMessageHandler(ctx context.Context, msg *amqp.De
 		log.Error().Err(err).Msg("message handler failed processing")
 		return ErrMessageHandler
 	} else {
-		if !rc.consumerOpts.AutoAck {
+		if rc.consumerOpts.AutoAck {
 			err = msg.Ack(false)
 			if err != nil {
 				log.Error().Err(err).Msg("failed to acknowledge message")

@@ -3,8 +3,9 @@ package consumer
 import (
 	"context"
 	"encoding/json"
-	"google.golang.org/protobuf/encoding/protojson"
 	"reflect"
+
+	"google.golang.org/protobuf/encoding/protojson"
 
 	"google.golang.org/protobuf/proto"
 )
