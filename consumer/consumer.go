@@ -40,10 +40,11 @@ type RabbitConsumer struct {
 
 	client *rabbit.Client
 
-	connectionOpts options.ConnectionOptions
-	exchangeOpts   options.ExchangeOptions
-	queueOpts      options.QueueOptions
-	consumerOpts   options.ConsumerOptions
+	connectionOpts          options.ConnectionOptions
+	exchangeOpts            options.ExchangeOptions
+	queueOpts               options.QueueOptions
+	consumerOpts            options.ConsumerOptions
+	supressProcessingErrors bool
 }
 
 func (rc *RabbitConsumer) Run(ctx context.Context) error {
@@ -142,7 +143,9 @@ func (rc *RabbitConsumer) invokeMessageHandler(ctx context.Context, msg *amqp.De
 
 	err = rc.MessageHandler.OnReceive(ctx, msg.CorrelationId, value)
 	if err != nil {
-		log.Error().Err(err).Msg("message handler failed processing")
+		if !rc.supressProcessingErrors {
+			log.Error().Err(err).Msg("message handler failed processing")
+		}
 		return ErrMessageHandler
 	} else {
 		if rc.consumerOpts.AutoAck {

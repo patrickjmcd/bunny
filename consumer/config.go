@@ -2,11 +2,12 @@ package consumer
 
 import (
 	"context"
+	"time"
+
 	"github.com/patrickjmcd/bunny/rabbit"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace/noop"
-	"time"
 
 	"github.com/patrickjmcd/bunny/internal/metrics"
 	"github.com/patrickjmcd/bunny/rabbit/options"
@@ -218,6 +219,12 @@ func WithMessageErrorHandler(handler MessageErrorHandler) RabbitConsumerOption {
 func WithPrefetchCount(prefetchCount int) RabbitConsumerOption {
 	return func(rc *RabbitConsumer) {
 		rc.consumerOpts.PrefetchCount = prefetchCount
+	}
+}
+
+func WithSuppressProcessingErrors(suppress bool) RabbitConsumerOption {
+	return func(rc *RabbitConsumer) {
+		rc.supressProcessingErrors = suppress
 	}
 }
 
