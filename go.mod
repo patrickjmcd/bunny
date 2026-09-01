@@ -1,6 +1,6 @@
 module github.com/patrickjmcd/bunny
 
-go 1.22.2
+go 1.23
 
 require (
 	github.com/prometheus/client_golang v1.20.4
@@ -10,7 +10,7 @@ require (
 	go.opentelemetry.io/otel v1.30.0
 	go.opentelemetry.io/otel/trace v1.30.0
 	golang.org/x/sync v0.8.0
-	google.golang.org/protobuf v1.34.2
+	google.golang.org/protobuf v1.36.12
 )
 
 require (
